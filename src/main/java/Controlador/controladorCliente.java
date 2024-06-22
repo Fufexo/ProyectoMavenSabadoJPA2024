@@ -1,6 +1,8 @@
 package Controlador;
 
 import java.io.IOException;
+import java.util.List;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -28,7 +30,43 @@ public class controladorCliente extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		//response.getWriter().append("Served at: ").append(request.getContextPath());
+		TblCliente cliente = new TblCliente();
+		ClassClienteImp crud = new ClassClienteImp();
+		List<TblCliente> listadocliente = crud.ListadoCliente();
+		//invocamos el listado de productos para la vista
+		request.setAttribute("listadodeproductos", listadocliente);
+		//redireccionamos
+		request.getRequestDispatcher("/ListadoClientes.jsp").forward(request, response);
+		
+		//recuperamos la accion y codigo
+		String accion = request.getParameter("accion");
+		//aplicamos una condicion...
+		if(accion!=null) {
+			switch(accion) {
+			case "Modificar":
+				int codigo=Integer.parseInt(request.getParameter("cod"));
+				//asignar el codigo ...
+				cliente.setIdcliente(codigo);
+				TblCliente buscarcod=crud.BuscarCliente(cliente);
+				//enviar los valores buscados por codigo de la base de datos
+				//al formulario actualizar..
+				request.setAttribute("codigo", buscarcod.getIdcliente());
+				request.setAttribute("nombre", buscarcod.getNombre());
+				request.setAttribute("apellido",buscarcod.getApellido());
+                request.setAttribute("dni",buscarcod.getDni());
+                request.setAttribute("email",buscarcod.getEmail());
+                request.setAttribute("Email",buscarcod.getEmail());
+                request.setAttribute("telefono",buscarcod.getTelf());
+                request.setAttribute("Sexo",buscarcod.getSexo());
+                request.setAttribute("nacionalidad",buscarcod.getNacionalidad());
+
+
+                request.getRequestDispatcher("/FormActualizarCliente.jsp").forward(request,response);
+
+                break;
+			}
+		}
 	}	// fin del metodo doget
 
 	/**
@@ -58,6 +96,10 @@ public class controladorCliente extends HttpServlet {
 		cliente.setNacionalidad(nacionalidad);
 		//invocamos la metodo registrar...
 		crud.RegistrarCliente(cliente);
+		//actualizar listado de clientes
+		List<TblCliente> listadocliente = crud.ListadoCliente();
+		//invocamos el listado de productos para la vista
+		request.setAttribute("listadodeproductos", listadocliente);
 		//redireccionamos
 		request.getRequestDispatcher("/ListadoClientes.jsp").forward(request, response);
 		}	// fin del metodo dopost

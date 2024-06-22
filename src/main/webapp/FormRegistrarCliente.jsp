@@ -8,7 +8,7 @@
 </head>
 <body bgcolor="#c5dec9">
 <h1 align="center">Registrar Cliente</h1>
-<form action="ControladorCliente" method="post">
+<form action="controladorCliente" method="post">
 <table border="2" align="center">
 <tr>
 <td>Nombre</td>

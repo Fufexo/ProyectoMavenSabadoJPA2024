@@ -24,25 +24,49 @@ public class ClassClienteImp implements ICliente{
 
 	@Override
 	public void ActualizarCliente(TblCliente cliente) {
-		// TODO Auto-generated method stub
+		EntityManagerFactory fabr = Persistence.createEntityManagerFactory("ProyectoMavenSabadoJPA");
+		EntityManager em = fabr.createEntityManager();
+		em.getTransaction().begin();
+		em.merge(cliente);
+		System.out.println("Cliente actualizado en la base de datos");
+		em.getTransaction().commit();
+		em.close();
 		
 	}
 
 	@Override
 	public void EliminarCliente(TblCliente cliente) {
-		// TODO Auto-generated method stub
+		EntityManagerFactory fabr = Persistence.createEntityManagerFactory("ProyectoMavenSabadoJPA");
+		EntityManager em = fabr.createEntityManager();
+		em.getTransaction().begin();
+		TblCliente elim = em.merge(cliente);
+		em.remove(elim);
+		System.out.println("Cliente eliminado de la base de datos");
+		em.getTransaction().commit();
+		em.close();
 		
 	}
 
 	@Override
 	public TblCliente BuscarCliente(TblCliente cliente) {
-		// TODO Auto-generated method stub
-		return null;
+		EntityManagerFactory fabr = Persistence.createEntityManagerFactory("ProyectoMavenSabadoJPA");
+		EntityManager em = fabr.createEntityManager();
+		em.getTransaction().begin();
+		TblCliente buscliente = em.find(TblCliente.class, cliente.getIdcliente());
+		em.getTransaction().commit();
+		em.close();
+		return buscliente;
 	}
 
 	@Override
 	public List<TblCliente> ListadoCliente() {
-		return null;
+		EntityManagerFactory fabr = Persistence.createEntityManagerFactory("ProyectoMavenSabadoJPA");
+		EntityManager em=fabr.createEntityManager();
+		em.getTransaction().begin();
+		List<TblCliente> listadoclientes=em.createQuery("select c from TblCliente c",TblCliente.class).getResultList();
+		em.getTransaction().commit();
+		em.close();
+		return listadoclientes;
 	}
 
 }
